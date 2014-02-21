@@ -1,0 +1,6 @@
+MIDlet-Name: Jorge
+MIDlet-Version: 1.0.0
+MIDlet-Vendor: FIRST
+MIDlet-1: Jorge, , com.team4673.frc2014.Jorge
+MicroEdition-Profile: IMP-1.0
+MicroEdition-Configuration: CLDC-1.1
