@@ -9,26 +9,26 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Catapult {
     
-    Talon retractor, trigger;
-    Relay wormscrew;
+    /*Talon retractor;
+    Talon piston;
     Joystick xbox;
     DigitalInput retractorLimit;
     boolean ready;
     Runnable job;
     
-    public Catapult(int retractorChannel, int triggerChannel, int motorChannel, Joystick stick, int retractorLimit) {
-        retractor = new Talon(retractorChannel);
-        trigger = new Talon(triggerChannel);
-        wormscrew = new Relay(motorChannel);
-        xbox = stick;
-        wormscrew.set(Relay.Value.kOff);
+    Relay compressor;
+    
+    public Catapult() {
+        //xbox = stick;
         ready = false;
+        
+        
+        
         retract();
     }
     
     public void start() {
         job = new Runnable() {
-
             public void run() {
                 catapult();
             }
@@ -41,23 +41,15 @@ public class Catapult {
             continue;
         }
         retractor.set(0);
-        wormscrew.set(Relay.Value.kForward);
-        Timer.delay(2);
-        wormscrew.set(Relay.Value.kOff);
+        Timer.delay(.5);
+        piston.set(1);
+        
+        
         ready = true;
     }
     
     public void shoot() {
-        trigger.set(1);
-        Timer.delay(.5);
-        trigger.set(0);
-        Timer.delay(.5);
-        trigger.set(-1);
-        Timer.delay(.5);
-        trigger.set(0);
-        wormscrew.set(Relay.Value.kReverse);
-        Timer.delay(2);
-        wormscrew.set(Relay.Value.kOff);
+
     }
     
     public void catapult() {
@@ -65,5 +57,75 @@ public class Catapult {
             shoot();
             retract();
         }
+    }*/
+    
+    Joystick xbox;
+    Talon cims;
+    DigitalInput limit, pressureSwitch;
+    Runnable job;
+    boolean ready;
+    Relay compressor, valv1, valv2;;
+    
+    public Catapult(Joystick stick, int cimsChannel, int limitChannel, int valv1Channel, int valv2Channel) {
+        xbox = stick;
+        cims = new Talon(cimsChannel);
+        limit = new DigitalInput(limitChannel);
+        valv1 = new Relay(valv1Channel);
+        valv2 = new Relay(valv2Channel);
+        ready = false;
+        compressor = new Relay(1);
+        pressureSwitch = new DigitalInput(5);
+    }
+    
+    public void start() {
+        retract();
+        job = new Runnable() {
+            public void run() {
+                manageCompressor();
+                catapult();
+            }
+        };
+    }
+    
+    public void manageCompressor() {
+        if(pressureSwitch.get()) {
+                    turnOffCompressor();
+                } else {
+                    turnOnCompressor();
+                }
+    }
+    
+    public void catapult() {
+        if(xbox.getTrigger(GenericHID.Hand.kRight) && ready) {
+            System.out.println("Shoot!");
+            shoot();
+        }
+    }
+    
+    public void retract() {
+        while(limit.get()) {
+            cims.set(1);
+        }
+        valv2.set(Relay.Value.kForward);
+        valv1.set(Relay.Value.kForward);
+        cims.set(0);
+        ready = true;
+    }
+    
+    public void shoot() {
+        valv2.set(Relay.Value.kOff);
+        Timer.delay(1);
+        valv1.set(Relay.Value.kOff);
+        Timer.delay(1);
+        retract();
+        ready = false;
+    }
+    
+    public void turnOnCompressor() {
+        compressor.set(Relay.Value.kForward);
+    }
+    
+    public void turnOffCompressor() {
+        compressor.set(Relay.Value.kOff);
     }
 }

@@ -7,18 +7,15 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class Lifter {
     
-    DigitalInput upLimit, downLimit;
     Talon motor;
     Joystick xbox;
     JoystickButton up, down;
     Thread job;
     
-    public Lifter(int channel, Joystick stick, int upLimitCh, int downLimitCh) {
+    public Lifter(int channel, Joystick stick) {
         motor = new Talon(channel);
         xbox = stick;
         job = new Thread(liftJob);
-        upLimit = new DigitalInput(upLimitCh);
-        downLimit = new DigitalInput(downLimitCh);
         up = new JoystickButton(xbox, 6);
         down = new JoystickButton(xbox, 5);
         

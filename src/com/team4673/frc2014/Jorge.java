@@ -9,6 +9,7 @@ package com.team4673.frc2014;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -34,9 +35,14 @@ public class Jorge extends IterativeRobot {
     public void autonomousPeriodic() {
         
     }
+    
+    public void autonomousInit() {
+        jorge.autonomous();
+    }
 
     
     public void teleopInit() {
+        jorge.teleopInit();
     }
     /**
      * This function is called periodically during operator control
